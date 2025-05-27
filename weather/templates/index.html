@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Forecast</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Weather Forecast</h1>
+    <form method="post">
+        {%csrf_token%}
+        <div class="mb-3">
+            <input type="text" class="form-control" id="cityinput" name="city" placeholder="Enter city name">
+        <div id="autocompleteResults" class="list-group"></div>
+        </div>
+        <button type="submit" class="btn btn-primary">Get Weather</button>
+    </form>
+    {% if history %} 
+    <div class="mt-3">
+    <h4> Recent searches:</h4>
+    <ul>
+        {% for city in history %}
+        <li><a href="#" class="recent-city">{{ city }}</a></li>
+        {% endfor %}
+    </ul>
+    </div>
+    {% endif %}
+    {% if weather %} 
+    <div class="mt-3">
+        <h3>Weather in {{ city }}</h3> 
+        <p>Temperature:{{ weather.temperature }}°C</p>
+        <p>Wind Speed:{{ weather.windspeed }} km/h</p>
+        <p>Wind Direction:{ weather.winddirection }3° </p>
+    </div>
+    {% endif %} 
+    {% if error %}
+    <div class="alert alert-dangermt-3">
+    {{ error }}
+    </div>
+    {% endif %}
+</div>
+<script>
+    $(document).ready(function() {
+        // Обработка ввода для автозаполнения.
+      $('#cityinput').on('input', function(){
+        let term = $(this).val();
+          if (term.length > 2) {
+            $.get('/autocomplete/', {term: term},
+function (data) {
+            let results = $
+('#autocompleteResults');
+            results.empty();
+            data.forEach(function(item) {
+              results.append (
+                <a href="#" class="list-group-item list-group-item-action">${item}</a>
+            );
+          });
+        results.show();
+      });
+    }
+});
+  $(document).on('click', '.list-group-item',
+  // Обработка клика по элементам автозаполнения.
+function(e) {
+    e.preventDefault();
+    $('#cityInput').val ($(this).text());
+    $('#autocompleteResults').hide();
+  });
+  // Обработка клика по "recent-city"
+  $(' recent-city') .click(function(e) {
+    e.preventDefault();
+    $('#cityinput').val($(this).text());
+  });
+});
+</script>
+</body>
+</html>
