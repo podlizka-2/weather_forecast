@@ -21,42 +21,47 @@ def index(request):
                 lat = result['geometry']['lat']
                 lng = result['geometry']['lng']
                 # Запрос погоды.
-                weather_url = f"https://open-meteo.com/v1/forecast?latitude={lat}&longitude={lng}&current_weather=true"
+                weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lng}&hourly=temperature_2m&timezone=auto"
                 weather_response = requests.get(weather_url)
                 if weather_response.status_code == 200:
                     weather_data = weather_response.json()
                     current_weather = weather_data.get('current_weather', {})
                     # Сохранение города.
-                    city, created = CitySearch.objects.get_or_create(name=city_name)
-                    city.count += 1
-                    city.save()
-                    # Обработка истории поиска в сессии.
+                    city_obj, created = CitySearch.objects.get_or_create(name=city_name)
+                    city_obj.count += 1
+                    city_obj.save()
+                    # История поиска.
                     history = request.session.get('search_history', [])
                     if city_name not in history:
                         history.insert(0, city_name)
                         if len(history) > 5:
                             history.pop()
                         request.session['search_history'] = history
-                    
+
                     return render(request, 'weather/index.html', {
                         'weather': current_weather,
                         'city': city_name,
                         'history': history
                     })
-            else:
-                # Не найден город или пустой результат.
-                return render(request, 'weather/index.html', {
-                    'error': 'Город не найден/выберите другой.'
-                })
+            # Город не найден или пустой результат.
+            return render(request, 'weather/index.html', {
+                'error': 'Город не найден/выберите другой.',
+                'weather': None,
+                'city': '',
+                'history': request.session.get('search_history', [])
+            })
         else:
             return render(request, 'weather/index.html', {
-                'error': 'Ошибка при обращении к геокодеру.'
+                'error': 'Ошибка при обращении к геокодеру.',
+                'weather': None,
+                'city': '',
+                'history': request.session.get('search_history', [])
             })
 
-    # GET-запрос (отображение страницы).
+    # GET-запрос.
     history = request.session.get('search_history', [])
-    return render(request, 'weather/index.html', {'history': history})
-
+    return render(request, 'weather/index.html', {'history': history, 'weather': None})
+    
 def autocomplete(request):
     term = request.GET.get('term', '')
     suggestions = []
