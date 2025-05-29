@@ -27,8 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+OPENCAGE_API_KEY='e7e5a251f2c5476b8420bac8233bb50a'
 # Application definition
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -51,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 
