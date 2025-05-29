@@ -5,8 +5,6 @@ from .models import CitySearch
 import os
 from django.conf import settings
 
-
-# Используем настройки Django вместо os.getenv()
 OPENCAGE_API_KEY = settings.OPENCAGE_API_KEY
 
 def index(request):
@@ -18,7 +16,7 @@ def index(request):
         'suggest_city': None
     }
 
-    # Предлагаем последний просмотренный город
+    # Предлагаем последний просмотренный город.
     if not request.method == 'POST' and context['history']:
         context['suggest_city'] = context['history'][0]
 
@@ -28,7 +26,7 @@ def index(request):
             context['error'] = 'Введите название города'
             return render(request, 'weather/index.html', context)
 
-        # Получение координат
+        # Получение координат.
         geo_url = f"https://api.opencagedata.com/geocode/v1/json?q={city_name}&key={OPENCAGE_API_KEY}&limit=1"
         try:
             geo_response = requests.get(geo_url)
@@ -58,16 +56,16 @@ def index(request):
                 return render(request, 'weather/index.html', context)
 
             if weather_response.status_code == 200 and 'current_weather' in weather_data:
-                # Сохранение города
+                # Сохранение города.
                 city_obj, created = CitySearch.objects.get_or_create(name=city_name)
                 city_obj.count += 1
                 city_obj.save()
                 
-                # Обновление истории
+                # Обновление истории.
                 history = request.session.get('search_history', [])
                 if city_name not in history:
                     history.insert(0, city_name)
-                    history = history[:5]  # Сохраняем только 5 последних
+                    history = history[:5]  # Сохраняем только 5 последних.
                     request.session['search_history'] = history
                     context['history'] = history
 
