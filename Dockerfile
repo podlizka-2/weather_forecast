@@ -22,7 +22,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Собираем статику
-RUN python manage.py collectstatic --noinput
+#RUN python manage.py collectstatic --noinput
 
 # Запускаем приложение
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "your_project.wsgi:application"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

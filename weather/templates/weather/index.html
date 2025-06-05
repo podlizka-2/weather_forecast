@@ -53,11 +53,11 @@
 
     {% if weather %}
     <div class="mt-3">
-        <h3>Погода в {{ city }}</h3> 
+        <h3>Погода в городе {{ city }}</h3> 
         <p>Температура: {{ weather.temperature }}°C</p>
         <p>Скорость ветра: {{ weather.windspeed }} км/ч</p>
         <p>Направление ветра: {{ weather.winddirection }}°</p>
-        <p>Время: {{ weather.time }}</p>
+        <p>Время: {{ weather.time    }}</p>
     </div>
     {% endif %}
 

@@ -4,6 +4,8 @@ import requests
 from .models import CitySearch
 import os
 from django.conf import settings
+from datetime import datetime
+
 
 OPENCAGE_API_KEY = settings.OPENCAGE_API_KEY
 
@@ -68,7 +70,7 @@ def index(request):
                     history = history[:5]  # Сохраняем только 5 последних.
                     request.session['search_history'] = history
                     context['history'] = history
-
+    
                 context.update({
                     'weather': weather_data['current_weather'],
                     'city': city_name
@@ -98,3 +100,4 @@ def autocomplete(request):
 def weather_status(request):
     status = CitySearch.objects.all().values('name', 'count')
     return JsonResponse(list(status), safe=False)
+
