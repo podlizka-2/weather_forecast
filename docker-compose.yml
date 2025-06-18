@@ -14,6 +14,7 @@ services:
       - OPENCAGE_API_KEY=e7e5a251f2c5476b8420bac8233bb50a
       - DJANGO_SECRET_KEY=django-insecure-^%i421f!#v@!1apd&np6^oj*0p2lnlc6(q7__c%)=+ab!)w!q#
       - DEBUG=0
+      - ALLOWED_HOSTS=localhost 127.0.0.1 0.0.0.0 weather.lizasite.ru 176.108.255.35
     # depends_on:
     #   - db
 
