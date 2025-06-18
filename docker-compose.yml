@@ -5,26 +5,26 @@ services:
     build: .
     command: >
       sh -c "python manage.py migrate --noinput &&
-             python manage.py runserver 0.0.0.0:8000"
+             python manage.py runserver 0.0.0.0:8001"
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - "8001:8001"
     environment:
       - OPENCAGE_API_KEY=e7e5a251f2c5476b8420bac8233bb50a
       - DJANGO_SECRET_KEY=django-insecure-^%i421f!#v@!1apd&np6^oj*0p2lnlc6(q7__c%)=+ab!)w!q#
       - DEBUG=0
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
 
-  db:
-    image: postgres:13
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_DB=weatherdb
-      - POSTGRES_USER=weatheruser
-      - POSTGRES_PASSWORD=weatherpass
+#   db:
+#     image: postgres:13
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data/
+#     environment:
+#       - POSTGRES_DB=weatherdb
+#       - POSTGRES_USER=weatheruser
+#       - POSTGRES_PASSWORD=weatherpass
 
-volumes:
-  postgres_data:
+# volumes:
+#   postgres_data:
